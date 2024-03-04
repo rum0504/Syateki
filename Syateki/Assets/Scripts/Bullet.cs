@@ -1,16 +1,22 @@
 using UnityEngine;
+
 public class Bullet : MonoBehaviour
 {
-    public GameObject hitEffect; // “–‚½‚Á‚½‚ÌƒGƒtƒFƒNƒg
+    public GameObject hitEffect; // å½“ãŸã£ãŸæ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    public float effectDuration = 2f; // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®è¡¨ç¤ºæ™‚é–“
+
     void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Wall")
         {
-            // ƒGƒtƒFƒNƒg‚ğ¶¬‚µ‚Ä©g‚ğ”jŠü
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
+            // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
+            GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
+            
+            // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ä¸€å®šæ™‚é–“å¾Œã«ç ´æ£„ã™ã‚‹
+            Destroy(effect, effectDuration);
+            
+            // å¼¾ä¸¸ã‚’ç ´æ£„
             Destroy(gameObject);
-
         }
-  
     }
 }

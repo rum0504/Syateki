@@ -21,12 +21,12 @@ public class ShootBullet : MonoBehaviour
     void Update()
     {
         // Aキーで前の球に、Dキーで次の球に切り替え
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             currentBulletIndex = Mathf.Max(currentBulletIndex - 1, 0);
             UpdateBulletTypeText();
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.C))
         {
             currentBulletIndex = Mathf.Min(currentBulletIndex + 1, bulletPrefabs.Count - 1);
             UpdateBulletTypeText();
@@ -57,7 +57,7 @@ public class ShootBullet : MonoBehaviour
         if (bulletTypeText != null && bulletPrefabs.Count > 0)
         {
             // プレハブ名から現在の球の種類をテキストに表示
-            bulletTypeText.text = "Current Bullet: " + bulletPrefabs[currentBulletIndex].name;
+            bulletTypeText.text = "Bullet: " + bulletPrefabs[currentBulletIndex].name;
         }
     }
 }
