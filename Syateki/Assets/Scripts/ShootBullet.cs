@@ -1,28 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // UI要素を使用するために必要
 
 public class ShootBullet : MonoBehaviour
 {
-    public GameObject bulletPrefab; // Inspectorから弾のプレハブを指定
-    public float initialSpeed = 10f; // Inspectorから弾の初速を指定
-    public Transform spawnPoint; // Inspectorから発射位置を指定
+    public List<GameObject> bulletPrefabs; // 弾のプレハブ
+    public List<float> initialSpeeds; // 各弾の初速
+    public List<GameObject> hitEffects; // 各弾が当たった時のエフェクト
+    public Transform spawnPoint; // 発射位置
+    public Text bulletTypeText; // 現在の球の種類を表示するテキスト
 
-    // Update is called once per frame
+    private int currentBulletIndex = 0; // 現在選択されている弾のインデックス
+
+    void Start()
+    {
+        UpdateBulletTypeText(); // スタート時にテキストを更新
+    }
+
     void Update()
     {
-        // Spaceボタンを押したら弾を発射
+        // Aキーで前の球に、Dキーで次の球に切り替え
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            currentBulletIndex = Mathf.Max(currentBulletIndex - 1, 0);
+            UpdateBulletTypeText();
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            currentBulletIndex = Mathf.Min(currentBulletIndex + 1, bulletPrefabs.Count - 1);
+            UpdateBulletTypeText();
+        }
+
+        // Spaceキーで球を撃つ
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Shoot();
+            Shoot(currentBulletIndex);
         }
     }
 
-    void Shoot()
+    void Shoot(int index)
     {
-        // 弾オブジェクトを生成して速度を設定
-        GameObject bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefabs[index], spawnPoint.position, spawnPoint.rotation);
         Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-        bulletRigidbody.velocity = spawnPoint.forward * initialSpeed;
+        bulletRigidbody.velocity = spawnPoint.forward * initialSpeeds[index];
+
+        Bullet bulletComponent = bullet.GetComponent<Bullet>();
+        if (bulletComponent != null)
+        {
+            bulletComponent.hitEffect = hitEffects[index];
+        }
+    }
+
+    void UpdateBulletTypeText()
+    {
+        if (bulletTypeText != null && bulletPrefabs.Count > 0)
+        {
+            // プレハブ名から現在の球の種類をテキストに表示
+            bulletTypeText.text = "Current Bullet: " + bulletPrefabs[currentBulletIndex].name;
+        }
     }
 }
